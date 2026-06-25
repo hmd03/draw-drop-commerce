@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # 1. 데이터 정합성을 위한 메인 DB (PostgreSQL)
+  postgres:
+    image: postgres:16-alpine
+    container_name: commerce-postgres
+    ports:
+      - '15432:5432'
+    environment:
+      POSTGRES_USER: commerce_user
+      POSTGRES_PASSWORD: commerce_password
+      POSTGRES_DB: commerce_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  # 2. 대기열 및 재고 캐싱을 위한 고성능 인메모리 DB (Redis)
+  redis:
+    image: redis:7-alpine
+    container_name: commerce-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
